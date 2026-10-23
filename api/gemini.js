@@ -12,7 +12,7 @@ module.exports = async function handler(req, res) {
   const messages=incoming.slice(-16).map(m=>({role:m&&m.role==='model'?'model':'user',text:typeof(m&&m.text)==='string'?m.text.slice(0,6000):''})).filter(m=>m.text.trim());
   if(!messages.length||messages[messages.length-1].role!=='user')return res.status(400).json({error:'The last conversation item must be a user message.'});
   const instruction=mode==='finance'?'Focus on budgeting, spending, saving, and financial literacy.':mode==='general'?'Answer general questions; do not assume every question is about finance.':'Help with personal finance and general topics according to the user’s actual question.';
-  const model=process.env.GEMINI_MODEL||'gemini-2.5-flash';
+  const model = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
   for(let attempt=0;attempt<3;attempt++){
     try{
       const upstream=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':apiKey},body:JSON.stringify({systemInstruction:{parts:[{text:`${SYSTEM_PROMPT}\n\nMode: ${instruction}`}]},contents:messages.map(m=>({role:m.role,parts:[{text:m.text}]})),generationConfig:{temperature:.65,maxOutputTokens:1200}})});
