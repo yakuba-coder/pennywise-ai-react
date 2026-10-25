@@ -1,6 +1,6 @@
 const SYSTEM_PROMPT = `You are Pennywise AI, a helpful assistant for personal finance and general questions. Explain concepts in plain language for beginners. Give practical, tailored steps and several realistic options when useful. Do not claim access to a user's dashboard, bank accounts, or files unless the user includes that information in their message. Never ask for passwords, OTPs, full account numbers, or card credentials. For financial topics, state assumptions, avoid guaranteed outcomes, and clarify that you are not a licensed financial adviser when appropriate. Be honest about uncertainty.`;
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-module.exports = async function handler(req, res) {
+export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') { res.setHeader('Allow','POST'); return res.status(405).json({error:'Use POST to send a message.'}); }
   const apiKey = process.env.GEMINI_API_KEY;
