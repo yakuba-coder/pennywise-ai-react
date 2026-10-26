@@ -60,12 +60,13 @@ async function recallMemories(query) {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
+           body: JSON.stringify({
         query,
         budget: 'low',
         max_tokens: 1200,
       }),
-    }
+    },
+    2500
   );
 
   return (data.results || [])
@@ -101,10 +102,11 @@ async function retainMemory(userMessage, assistantReply) {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
+           body: JSON.stringify({
         items: [{ content }],
       }),
-    }
+    },
+    2000
   );
 }
 
@@ -211,7 +213,7 @@ export default async function handler(req, res) {
 
   let reply = '';
 
-  for (let attempt = 0; attempt < 3; attempt++) {
+  for (let attempt = 0; attempt < 1; attempt++) {
     try {
       const result = await requestJSON(
         `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`,
@@ -235,7 +237,7 @@ export default async function handler(req, res) {
             },
           }),
         },
-        18000
+        15000
       );
 
       reply = (result.candidates || [])
